@@ -60,3 +60,19 @@ Bot de Discord com **um único comando slash: `/painel`**. Todas as operações 
 
 - Não coloque o token do bot no código-fonte nem compartilhe o arquivo `.env`.
 - Não execute este bot com o token do Soulsbot ou do Catálogo. Crie um bot Discord separado.
+
+## Forçar atualização dos comandos slash
+
+Esta versão sincroniza os comandos locais no servidor indicado por `GUILD_ID` e publica somente `/painel` nesse servidor. Em seguida, limpa os comandos globais antigos desta mesma aplicação Discord. Isso não remove comandos de outras aplicações/bots e não altera canais, cargos ou mensagens.
+
+**Atenção:** se você reutilizou a mesma aplicação Discord para outros comandos que ainda precisa manter, não use esta sincronização forçada até separar as aplicações. O processo é intencionalmente restrito à aplicação/token configurados neste projeto.
+
+Para aplicar a atualização:
+
+1. Substitua os arquivos pela versão atualizada.
+2. Confirme que `GUILD_ID` é o ID do seu servidor correto.
+3. Pare a instância antiga do bot e execute `python bot.py` novamente.
+4. Aguarde no terminal as mensagens `Comandos do servidor sincronizados` e `Comandos globais antigos removidos`.
+5. No Discord, feche e reabra o menu de comandos slash. A atualização global pode levar algum tempo a desaparecer do cliente; comandos registrados diretamente no servidor normalmente atualizam mais rápido.
+
+Não é possível forçar a atualização remotamente sem executar o bot com o token da aplicação. Nunca compartilhe o token.

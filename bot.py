@@ -299,13 +299,34 @@ async def apply_actions(guild: Optional[discord.Guild], actions: list[Action], i
 class OrganizerBot(commands.Bot):
     async def setup_hook(self):
         if GUILD_ID:
-            guild_obj=discord.Object(id=GUILD_ID)
+            guild_obj = discord.Object(id=GUILD_ID)
+
+            # Registra primeiro os comandos locais (nesta versão, apenas /painel)
+            # no escopo do servidor. O sync substitui a lista remota desse servidor.
             self.tree.copy_global_to(guild=guild_obj)
-            await self.tree.sync(guild=guild_obj)
-            log.info('Comandos sincronizados no servidor %s', GUILD_ID)
+            synced_guild = await self.tree.sync(guild=guild_obj)
+            log.info(
+                'Comandos do servidor sincronizados (%s): %s',
+                GUILD_ID,
+                ', '.join(command.name for command in synced_guild) or '(nenhum)',
+            )
+
+            # Remove comandos globais antigos que possam ter ficado publicados
+            # por versões anteriores desta aplicação. Isso afeta apenas comandos
+            # slash desta aplicação, não mensagens, canais, cargos ou outros bots.
+            self.tree.clear_commands(guild=None)
+            synced_global = await self.tree.sync()
+            log.info(
+                'Comandos globais antigos removidos: %s comando(s) restante(s).',
+                len(synced_global),
+            )
         else:
-            await self.tree.sync()
-            log.warning('GUILD_ID não definido; sincronização global pode demorar para aparecer.')
+            # Sem GUILD_ID, não é seguro limpar os comandos globais: exigimos que
+            # o servidor seja configurado para garantir uma atualização direcionada.
+            raise RuntimeError(
+                'GUILD_ID não definido. Preencha o ID do servidor no .env; '
+                'a sincronização forçada foi interrompida por segurança.'
+            )
 
 intents=discord.Intents.default()
 bot=OrganizerBot(command_prefix='!', intents=intents)
