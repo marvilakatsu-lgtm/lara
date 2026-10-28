@@ -46,7 +46,7 @@ O bot cria automaticamente o banco de dados e as tabelas na primeira execução.
 
 | Módulo | Comando Principal | Função |
 | :--- | :--- | :--- |
-| Core | `/status`, `/painel_admin` | Health check e administração central |
+| Core/Painel | `/painel` | Interface central por botões, formulários e submenus |
 | Infra | `/infra_analisar`, `/infra_aplicar` | Reconciliação declarativa de canais/cargos |
 | Sentinela | `/nivel`, `/ranking-xp` | XP, níveis, patentes e cargos automáticos |
 | Conquistas | `/platina`, `/zerado`, `/minhas_conquistas` | Platinas (com aprovação) e zerados (auto) |
@@ -57,18 +57,21 @@ O bot cria automaticamente o banco de dados e as tabelas na primeira execução.
 | Catálogo | `/catalogo_buscar`, `/catalogo_adicionar` | Gestão de jogos/mods com busca por tags |
 | Verificação | `/painel_verificacao`, `/painel_cargos` | Onboarding e auto-cargos persistentes |
 
+## Painel único por botões
+
+No Discord, execute somente `/painel`. O painel é privado para quem o abriu e apresenta áreas de jogador e administração. As ações reutilizam os módulos existentes e pedem os dados necessários por formulários; ações que publicam painéis pedem a seleção do canal.
+
+A sincronização do bot remove os demais comandos da lista de comandos slash do servidor e publica apenas `/painel`. Na primeira inicialização após a atualização, o Discord pode levar alguns instantes para refletir a lista nova. Ações administrativas continuam protegidas por permissões do Discord.
+
 ## Reconstrução do Servidor
 
 1. Adicione o bot ao servidor com permissões: `Manage Channels`, `Manage Roles`, `Send Messages`, `Embed Links`, `Read Message History`.
-2. Execute `/infra_analisar` para ver o plano de reconciliação.
+2. Abra `/painel` → **Servidor** → **Analisar estrutura** para ver o plano de reconciliação.
 3. Revise as ações propostas (nenhuma alteração é feita automaticamente).
-4. Execute `/infra_aplicar` para criar/renomear canais e categorias conforme o template otimizado.
-5. Use `/infra_cargos` para criar os cargos padrão ausentes.
+4. No painel, abra **Servidor** → **Aplicar estrutura analisada** para criar/renomear canais e categorias conforme o template otimizado.
+5. No painel, abra **Servidor** → **Criar cargos padrão** para criar os cargos padrão ausentes.
 6. Publique os painéis nos canais correspondentes:
-   - `/painel_verificacao` → 📜・regras-e-boas-vindas
-   - `/painel_cargos` → 🎭・cargos
-   - `/painel_coliseu` → 🏆・coliseu
-   - `/sl_painel_mod` → 🔒・chat-da-equipe (ou canal de moderação)
+   - Use `/painel` → **Servidor** para publicar cada painel e selecionar o canal.
 
 ## Persistência e Backup
 
@@ -119,7 +122,7 @@ bot_unificado/
 
 ## Suporte
 
-Para dúvidas sobre funcionalidades, use `/status` no Discord ou consulte este README.
+Para dúvidas sobre funcionalidades, use `/painel` no Discord ou consulte este README.
 Erros são registrados em `colizeu.log` e na tabela `sys_logs`.
 
 ---

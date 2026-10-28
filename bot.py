@@ -45,6 +45,7 @@ class ColizeuBot(commands.Bot):
         # Carregar Cogs (Módulos)
         cogs = [
             "cogs.core",
+            "cogs.painel",
             "cogs.infra",
             "cogs.sentinela",
             "cogs.conquistas",
@@ -64,14 +65,23 @@ class ColizeuBot(commands.Bot):
             except Exception:
                 log.exception("Falha ao carregar módulo: %s", cog)
 
-        # Sincronizar comandos slash
+        # Publica apenas /painel. Os comandos dos módulos continuam disponíveis
+        # internamente para que os botões possam reutilizar a lógica existente.
+        for command in list(self.tree.get_commands()):
+            if command.name != "painel":
+                self.tree.remove_command(command.name, type=command.type)
+
         if config.GUILD_ID:
+            # Sincroniza global e no servidor de teste para também remover comandos
+            # antigos que tenham sido publicados globalmente em versões anteriores.
+            await self.tree.sync()
             guild = discord.Object(id=config.GUILD_ID)
             self.tree.copy_global_to(guild=guild)
-            synced = await self.tree.sync(guild=guild)
-            log.info("Comandos sincronizados no servidor %s: %s comandos.", config.GUILD_ID, len(synced))
+            await self.tree.sync(guild=guild)
+            log.info("Apenas /painel sincronizado globalmente e no servidor %s.", config.GUILD_ID)
         else:
-            log.warning("GUILD_ID não definido. Comandos não foram sincronizados automaticamente.")
+            await self.tree.sync()
+            log.info("Apenas /painel sincronizado globalmente; a propagação pode demorar.")
 
     async def on_ready(self):
         log.info("Bot conectado como %s (ID: %s)", self.user, self.user.id)
