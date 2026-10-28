@@ -152,6 +152,16 @@ class ChannelActionView(discord.ui.View):
         await self.panel.invoke(interaction, self.cog_name, self.command_name, {"canal": self.selected_channel})
 
 
+def get_cog_command(cog, command_name: str):
+    """Localiza um comando slash registrado em um Cog pelo nome público."""
+    if cog is None:
+        return None
+    return next(
+        (command for command in cog.get_app_commands() if command.name == command_name),
+        None,
+    )
+
+
 class PanelView(discord.ui.View):
     def __init__(self, bot: commands.Bot, owner_id: int, page: str = "home"):
         super().__init__(timeout=300)
@@ -221,7 +231,7 @@ class PanelView(discord.ui.View):
 
     async def open_action(self, interaction: discord.Interaction, cog_name: str, command_name: str):
         cog = self.bot.get_cog(cog_name)
-        command = cog.get_app_command(command_name) if cog else None
+        command = get_cog_command(cog, command_name)
         if command is None:
             return await interaction.response.send_message(f"A ação **{self.label_for(command_name)}** não está disponível neste momento.", ephemeral=True)
         params = command.parameters
@@ -237,7 +247,7 @@ class PanelView(discord.ui.View):
         if command_name in ADMIN_COMMANDS and not is_admin(interaction, command_name):
             return await interaction.response.send_message("Você não tem permissão para executar esta ação.", ephemeral=True)
         cog = self.bot.get_cog(cog_name)
-        command = cog.get_app_command(command_name) if cog else None
+        command = get_cog_command(cog, command_name)
         if not command:
             return await interaction.response.send_message("A ação não está disponível.", ephemeral=True)
         # Reutiliza a lógica já existente nos módulos, sem registrar comandos slash adicionais.
