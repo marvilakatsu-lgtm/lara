@@ -136,9 +136,8 @@ class Conquistas(commands.Cog):
             title="🏆 Coliseu de Conquistas",
             description=(
                 "Bem-vindo ao hall dos guerreiros!\n\n"
-                "Use `/platina` para submeter suas platinas à aprovação.\n"
-                "Use `/zerado` para registrar jogos finalizados instantaneamente.\n"
-                "Use `/minhas_conquistas` para ver seu histórico."
+                "Use os botões do painel para registrar uma platina, registrar um jogo zerado ou consultar seu histórico de conquistas.\n"
+                "Selecione a opção desejada no painel; não é necessário digitar comandos para essas ações."
             ),
             color=config.COR_OURO
         )
