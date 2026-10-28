@@ -69,7 +69,7 @@ class ColizeuBot(commands.Bot):
         # internamente para que os botões possam reutilizar a lógica existente.
         for command in list(self.tree.get_commands()):
             if command.name != "painel":
-                self.tree.remove_command(command.name, type=command.type)
+                self.tree.remove_command(command.name)
 
         if config.GUILD_ID:
             # Sincroniza global e no servidor de teste para também remover comandos
