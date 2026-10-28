@@ -130,16 +130,16 @@ class ChannelActionView(discord.ui.View):
         self.cog_name = cog_name
         self.command_name = command_name
         self.selected_channel = None
-        selector = discord.ui.ChannelSelect(
+        self.channel_selector = discord.ui.ChannelSelect(
             placeholder="Selecione o canal de destino",
             channel_types=[discord.ChannelType.text, discord.ChannelType.news],
             min_values=1, max_values=1,
         )
-        selector.callback = self.channel_selected
-        self.add_item(selector)
+        self.channel_selector.callback = self.channel_selected
+        self.add_item(self.channel_selector)
 
     async def channel_selected(self, interaction: discord.Interaction):
-        self.selected_channel = self.children[0].values[0]
+        self.selected_channel = self.channel_selector.values[0]
         await interaction.response.edit_message(
             content=f"Canal selecionado: {self.selected_channel.mention}. Clique em **Executar** para publicar o painel.",
             view=self,
