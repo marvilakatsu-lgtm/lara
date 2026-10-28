@@ -564,7 +564,8 @@ async def apply_actions(guild: Optional[discord.Guild], actions: list[Action], i
             # Categorias fora do modelo são preservadas e ficam depois das categorias padronizadas.
             ordered_categories.extend(c for c in refreshed_categories if c not in ordered_categories)
             if ordered_categories:
-                await guild.edit_channel_positions({cat: i for i, cat in enumerate(ordered_categories)}, reason='Organizador Quase-Pro: ordenar categorias conforme modelo aprovado')
+                for i, cat in enumerate(ordered_categories):
+                    await cat.edit(position=i, reason='Organizador Quase-Pro: ordenar categorias conforme modelo aprovado')
 
             for spec in CATEGORIES:
                 cat = next((c for c in guild.categories if same_name(c.name, spec['name'])), None)
@@ -581,7 +582,8 @@ async def apply_actions(guild: Optional[discord.Guild], actions: list[Action], i
                 # Canais adicionais não mapeados não são apagados; ficam depois dos mapeados.
                 ordered_children.extend(c for c in children if c not in ordered_children)
                 if ordered_children:
-                    await guild.edit_channel_positions({channel: i for i, channel in enumerate(ordered_children)}, reason=f'Organizador Quase-Pro: ordenar canais em {cat.name}')
+                    for i, channel in enumerate(ordered_children):
+                        await channel.edit(position=i, reason=f'Organizador Quase-Pro: ordenar canais em {cat.name}')
             done.append('Ordenar categorias e canais conforme o modelo Quase-Pro')
         except (discord.HTTPException, discord.Forbidden, KeyError, ValueError) as e:
             failed.append(f'Ordenar categorias e canais: {type(e).__name__}')

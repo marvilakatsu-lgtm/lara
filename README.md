@@ -76,3 +76,7 @@ Para aplicar a atualização:
 5. No Discord, feche e reabra o menu de comandos slash. A atualização global pode levar algum tempo a desaparecer do cliente; comandos registrados diretamente no servidor normalmente atualizam mais rápido.
 
 Não é possível forçar a atualização remotamente sem executar o bot com o token da aplicação. Nunca compartilhe o token.
+
+
+### Correção de ordenação (28/10/2026)
+A ordenação agora edita a posição de cada categoria/canal individualmente usando `edit(position=...)`, compatível com discord.py. Se a API negar uma operação ou o bot não tiver permissões suficientes, o erro será reportado no resultado do painel.
