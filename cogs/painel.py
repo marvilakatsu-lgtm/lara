@@ -139,7 +139,15 @@ class ChannelActionView(discord.ui.View):
         self.add_item(self.channel_selector)
 
     async def channel_selected(self, interaction: discord.Interaction):
-        self.selected_channel = self.channel_selector.values[0]
+        # discord.py 2.7 entrega AppCommandChannel no seletor; os Cogs esperam
+        # um objeto TextChannel real com métodos send/fetch_message.
+        selected = self.channel_selector.values[0]
+        channel = await self.panel.bot.fetch_channel(selected.id)
+        if not isinstance(channel, (discord.TextChannel, discord.Thread)):
+            return await interaction.response.send_message(
+                "Selecione um canal de texto válido.", ephemeral=True
+            )
+        self.selected_channel = channel
         await interaction.response.edit_message(
             content=f"Canal selecionado: {self.selected_channel.mention}. Clique em **Executar** para publicar o painel.",
             view=self,
